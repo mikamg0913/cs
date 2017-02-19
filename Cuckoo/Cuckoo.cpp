@@ -46,7 +46,7 @@ Cuckoo::Cuckoo(int N, int SN, Data& dataa, double betaa, double sigmaa,int funcc
 		xx.push_back(x_make());
 	}
 	std::sort(xx.begin(),xx.end(), [](const Bird& a, const Bird& b) {return a.f < b.f; });
-	best_num = xx[0].f;
+	best_f= xx[0].f;
 }
 
 Bird& Cuckoo::x_make() {
@@ -78,6 +78,11 @@ void Cuckoo::x_update() {
 	}
 }
 
+void Cuckoo::sort_update() {
+	std::sort(xx.begin(), xx.end(), [](const Bird& a, const Bird& b) {return a.f < b.f; });
+	best_f = xx[0].f;
+}
+
 void Cuckoo::worst_update() {
 	for (int i = 0; i < n*pa; i++) 
 		xx.pop_back();
@@ -87,8 +92,8 @@ void Cuckoo::worst_update() {
 
 void Cuckoo::update() {
 	x_update();
+	sort_update();
 	worst_update();
-
 }
 
 

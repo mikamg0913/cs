@@ -42,7 +42,8 @@ private:
 	//Levy levy{1.8};
 	Levy levy;
 public:
-	double best_num;
+
+	double best_f;
 	
 	//巣の生成
 	Bird& x_make();
@@ -52,6 +53,8 @@ public:
 
 	//ランダムウォーク含めた更新
 	void x_update();
+	//ソートするだけ
+	void sort_update();
 	//悪巣を排除、新しいの作る
 	void worst_update();
 	//全体の更新
