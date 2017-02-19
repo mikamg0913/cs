@@ -240,3 +240,13 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/Cuckoo/out2.txt
+/Cuckoo/out2.plt
+/Cuckoo/out.txt
+/Cuckoo/out.png
+/Cuckoo/out.plt
+/Cuckoo/n_out.txt
+/Cuckoo/move.txt
+/Cuckoo/move.png
+/Cuckoo/move.plt
+/Cuckoo/move - コピー (2).txt
