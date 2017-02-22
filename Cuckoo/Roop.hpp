@@ -10,7 +10,7 @@ private:
 	double best, all_best;
 	std::vector<double> num;
 public:
-	Roop(int N, int SN, Data& DATA,double BETA, double SIGMA,int tryy);
+	Roop(int N, int SN, Data& DATA,int,int,int tryy);
 
 	void update();
 };

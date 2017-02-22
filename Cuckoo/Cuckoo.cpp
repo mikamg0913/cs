@@ -31,8 +31,8 @@ Cuckoo::Cuckoo() {
 }
 
 
-Cuckoo::Cuckoo(int N, int SN, Data& dataa, double betaa, double sigmaa,int funcc) {
-	levy = Levy(betaa),beta=betaa,sigma=sigmaa;
+Cuckoo::Cuckoo(int N, int SN, Data& dataa, double betaa,int funcc) {
+	levy = Levy(betaa),beta=betaa,func_num=funcc;
 	n = N, sn = SN, data = Data(func.min_max[func_num]);
 	func_num = funcc;
 
@@ -49,7 +49,7 @@ Cuckoo::Cuckoo(int N, int SN, Data& dataa, double betaa, double sigmaa,int funcc
 	best_f= xx[0].f;
 }
 
-Bird& Cuckoo::x_make() {
+Bird Cuckoo::x_make() {
 	Bird b;
 	for(int i=0;i<n;i++)
 		b.x.push_back(data.rd_make());
@@ -59,9 +59,10 @@ Bird& Cuckoo::x_make() {
 
 void Cuckoo::x_update() {
 	int x_rand = data.rd_make_int(n);
+	x_rand = 0;
 	Bird dammy;
 	for (int i = 0; i < n;i++) {
-		dammy.x.push_back(xx[x_rand].x[i] + levy.Make());
+		dammy.x.push_back(xx[x_rand].x[i] +0.01* levy.Make());
 		//Ü‚è•Ô‚µ
 		//’l-Š„‚Á‚½®””{*Š„‚Á‚½’l
 		double am=dammy.x[i]-(int)(dammy.x[i] / (data.max-data.min))*(data.max-data.min);

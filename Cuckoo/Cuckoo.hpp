@@ -33,7 +33,6 @@ private:
 	double beta, sigma,pa=0.4;
 	Data data;
 	double best, all_best;
-	int func_num;
 	Func func;
 
 	//値
@@ -46,10 +45,10 @@ public:
 	double best_f;
 	
 	//巣の生成
-	Bird& x_make();
+	Bird x_make();
 
 	Cuckoo();
-	Cuckoo(int N,int SN,Data& dataa,double betaa,double sigmaa,int funcc);
+	Cuckoo(int N,int SN,Data& dataa,double betaa,int funcc);
 
 	//ランダムウォーク含めた更新
 	void x_update();
