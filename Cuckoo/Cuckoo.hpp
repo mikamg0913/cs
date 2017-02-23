@@ -6,7 +6,7 @@
 
 class Levy {
 private:
-	double beta, sigma;
+	double beta=1, sigma;
 	std::normal_distribution<> n_d_u, n_d_v;
 	
 	std::default_random_engine eng;
@@ -30,10 +30,10 @@ public:
 class Cuckoo {
 private:
 	int n, sn, func_num, try_num;
-	double beta, sigma,pa=0.4;
-	Data data;
+	double beta, sigma,pa=0.1;
 	double best, all_best;
 	Func func;
+	Data *data;
 
 	//’l
 	std::vector<Bird> xx;

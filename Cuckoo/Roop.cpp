@@ -3,9 +3,11 @@
 
 
 Roop::Roop(int N,int SN,Data& dataa,int _func,int _roop,int tryy) {
-	n = N, sn = SN, data = dataa, func_num = _func;
+	n = N, sn = SN, func_num = _func;
 	roop_num = _roop, try_num = tryy;
 	beta = 1;
+	data = dataa;
+
 	//sigma = 1;
 
 	for (int i = 0; i < _roop; i++)num.push_back(0);

@@ -32,19 +32,17 @@ Cuckoo::Cuckoo() {
 
 
 Cuckoo::Cuckoo(int N, int SN, Data& dataa, double betaa,int funcc) {
-	levy = Levy(betaa),beta=betaa,func_num=funcc;
-	n = N, sn = SN, data = Data(func.min_max[func_num]);
+	//levy = Levy(betaa);
+	beta=betaa,func_num=funcc;
+	n = N, sn = SN;
+	//data = dataa;
+	data = new Data(func.min_max[func_num]);
 	func_num = funcc;
+	auto test = data->max;
 
-	for (int i = 0; i < sn; i++) {
-		//Bird bird;
-		/*for (int j = 0; j < n; j++) 
-			bird.x.push_back(data.rd_make());
-
-		bird.f = func.ff[func_num](bird.x);*/
-
+	for (int i = 0; i < sn; i++) 
 		xx.push_back(x_make());
-	}
+	
 	std::sort(xx.begin(),xx.end(), [](const Bird& a, const Bird& b) {return a.f < b.f; });
 	best_f= xx[0].f;
 }
@@ -52,30 +50,31 @@ Cuckoo::Cuckoo(int N, int SN, Data& dataa, double betaa,int funcc) {
 Bird Cuckoo::x_make() {
 	Bird b;
 	for(int i=0;i<n;i++)
-		b.x.push_back(data.rd_make());
+		b.x.push_back(data->rd_make());
 	b.f = func.ff[func_num](b.x);
 	return b;
 }
 
 void Cuckoo::x_update() {
-	int x_rand = data.rd_make_int(n);
-	x_rand = 0;
+	int x_rand = data->rd_make_int(sn);
+	int j_rand = data->rd_make_int(sn);
+	//x_rand = 0;
 	Bird dammy;
 	for (int i = 0; i < n;i++) {
 		dammy.x.push_back(xx[x_rand].x[i] +0.01* levy.Make());
 		//Ü‚è•Ô‚µ
 		//’l-Š„‚Á‚½®””{*Š„‚Á‚½’l
-		double am=dammy.x[i]-(int)(dammy.x[i] / (data.max-data.min))*(data.max-data.min);
+		double am=(dammy.x[i]-data->min)-(int)(dammy.x[i] / (data->max-data->min))*(data->max-data->min)+data->min;
 		dammy.x[i] = am;
 	}
 	dammy.f=func.ff[func_num](dammy.x);
-	if (xx[x_rand].f > dammy.f) {
+	if (xx[j_rand].f > dammy.f) {
 		int i = 0;
 		for (auto&& v : dammy.x) {
-			xx[x_rand].x[i] = dammy.x[i];
+			xx[j_rand].x[i] = dammy.x[i];
 			i++;
 		}
-		xx[x_rand].f = dammy.f;
+		xx[j_rand].f = dammy.f;
 	}
 }
 
@@ -85,9 +84,9 @@ void Cuckoo::sort_update() {
 }
 
 void Cuckoo::worst_update() {
-	for (int i = 0; i < n*pa; i++) 
+	for (int i = 0; i < sn*pa; i++) 
 		xx.pop_back();
-	for (int i = 0; i < n*pa; i++)
+	for (int i = 0; i < sn*pa; i++)
 		xx.push_back(x_make());
 }
 

@@ -20,12 +20,17 @@ int main(void) {
 	cin >> roop_num;
 	cout << "ŽŽs‰ñ”:";
 	cin >> try_num;
-
-	Data data;
+	
+	Func func;
+	Data data(func.min_max[func_num]);
+	
 	Roop roop(N, SN, data, func_num, roop_num,try_num);
 
 	roop.update();
-
+	/*Levy levy;
+	for (int i = 0; i < 100; i++) {
+		cout << levy.Make() << endl;
+	}*/
 	cout << "end";
 	return 0;
 }

@@ -22,7 +22,7 @@ public:
 	int rd_make_int();
 	int rd_make_int(int);
 
-	Data& Data::operator=(const Data&) {
-		return *this;
+	Data& Data::operator=(Data& dataa) {
+		return dataa;
 	}
 };
