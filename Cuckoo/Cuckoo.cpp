@@ -16,21 +16,25 @@ Levy::Levy(double _beta) {
 	sigma = pow(tgamma(beta + 1)*sin(std::_Pi*beta / 2) /
 		tgamma((beta + 1) / 2)*beta*pow(2, (beta - 1) / 2), 1 / beta);
 
-	n_d_u = std::normal_distribution<double>(0.0, sigma*sigma);
-	n_d_v = std::normal_distribution<double>(0.0, 1.0);
+	n_d_u = std::normal_distribution<>(0, sigma*sigma);
+	n_d_v = std::normal_distribution<>(0, 1.0);
 
 }
 
 double Levy::Make() {
 	//return pow(roop_num, -beta);
-	return (n_d_v(eng)*sigma)/ pow(abs(n_d_v(eng)), 1 / beta);
+	//return (n_d_u(eng)*sigma)/ pow(abs(n_d_v(eng)), 1 / beta);
+	return (n_d_u(mt)*sigma) / pow(abs(n_d_v(mt2)), 1 / beta);
 	//return n_d_u(eng);
+	return 0.1;
 }
 
 double Levy::Make_s(double x, double best) {
 	double step=0.01*Make()*(x-best);
 	//return step*Make();
-	return step*n_d_v(eng);
+	return step;
+	//return step*n_d_v(eng);
+	//return 0.1;
 }
 
 Cuckoo::Cuckoo() {
@@ -72,12 +76,16 @@ Bird Cuckoo::x_make_levy(int j) {
 }
 
 void Cuckoo::x_update() {
-	int x_rand = data->rd_make_int(sn);
+	int x_rand = 1;
+	//int x_rand = data->rd_make_int(sn);
+
+	int j_rand = 1;
+	//int j_rand = data->rd_make_int(sn);
 	
-	int j_rand = data->rd_make_int(sn);
 	//x_rand = 0;
 	Bird dammy;
 	for (int i = 0; i < n;i++) {
+		//double lv = 0.1;
 		double lv = levy.Make();
 		dammy.x.push_back(xx[x_rand].x[i] +alpha* lv);
 		//Ü‚è•Ô‚µ
@@ -97,12 +105,18 @@ void Cuckoo::x_update() {
 }
 
 void Cuckoo::x_update_s() {
+	//int x_rand = 1;
 	int x_rand = data->rd_make_int(sn);
+	//int k = 1;
 	int k = data->rd_make_int(sn);
+	
 	//x_rand = 0;
+	
 	Bird dammy;
 	for (int i = 0; i < n; i++) {
+		//alpha = 0.1;
 		alpha = levy.Make_s(xx[x_rand].x[i], best.x[i]);
+		//alpha = levy.Make();
 		dammy.x.push_back(xx[x_rand].x[i] + alpha);
 		//Ü‚è•Ô‚µ
 		if (dammy.x[i] > data->max || dammy.x[i] < data->min) {
