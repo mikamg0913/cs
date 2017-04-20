@@ -40,6 +40,12 @@ private:
 	//値
 	std::vector<Bird> xx;
 	Bird best;
+	std::vector<Bird> x_dm;
+
+
+	std::vector<std::vector<bool>> wnest;
+	std::vector<int> sh_num,sh_num2;
+
 
 	Levy levy{1.5};
 	//Levy levy;
@@ -59,6 +65,8 @@ public:
 	//ランダムウォーク含めた更新
 	void x_update();
 	void x_update_s();
+	void x_update_s(int);
+
 	//ソートするだけ
 	void sort_update();
 	//悪巣を排除、新しいの作る

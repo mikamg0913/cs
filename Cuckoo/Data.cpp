@@ -21,7 +21,7 @@ Data::Data(std::pair<double, double> min_max) {
 	score_int = std::uniform_int_distribution<int>();
 	min = min_max.first, max = min_max.second;
 	score = std::uniform_real_distribution<double>(min_max.first, min_max.second);
-	phi = std::uniform_real_distribution<double>(-1.0, 1.0);
+	phi = std::uniform_real_distribution<double>(0, 1.0);
 }
 
 double Data::rd_make() {

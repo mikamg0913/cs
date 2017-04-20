@@ -30,10 +30,10 @@ double Levy::Make() {
 }
 
 double Levy::Make_s(double x, double best) {
-	double step=0.01*Make()*(x-best);
+	double step=0.01*Make()*(best-x);
 	//return step*Make();
-	return step;
-	//return step*n_d_v(eng);
+	//return step;
+	return step*n_d_v(eng);
 	//return 0.1;
 }
 
@@ -52,7 +52,26 @@ Cuckoo::Cuckoo(int N, int SN, Data& dataa, double betaa,int funcc) {
 
 	for (int i = 0; i < sn; i++) 
 		xx.push_back(x_make());
+	for (int i = 0; i < sn; i++) 
+		x_dm.push_back(xx[i]);
 	
+
+	
+	
+	//wnest‚Ì‰Šú‰»
+	for (int i = 0; i < sn; i++) {
+		std::vector<bool> dm;
+		for (int j = 0; j < n; j++) {
+			dm.push_back(0);
+		}
+		wnest.push_back(dm);
+	}
+
+	for (int i = 0; i < sn; i++) {
+		sh_num.push_back(i);
+		sh_num2.push_back(i);
+	}
+
 	std::sort(xx.begin(),xx.end(), [](const Bird& a, const Bird& b) {return a.f < b.f; });
 	for (int i = 0; i < n; i++)best.x.push_back(xx[0].x[i]);
 	best_f= xx[0].f;
@@ -105,12 +124,13 @@ void Cuckoo::x_update() {
 }
 
 void Cuckoo::x_update_s() {
+	x_update_s(data->rd_make_int(sn));
+}
+
+void Cuckoo::x_update_s(int s) {
 	//int x_rand = 1;
-	int x_rand = data->rd_make_int(sn);
-	//int k = 1;
-	int k = data->rd_make_int(sn);
-	
-	//x_rand = 0;
+	//int x_rand = data->rd_make_int(sn);
+	int x_rand = s;
 	
 	Bird dammy;
 	for (int i = 0; i < n; i++) {
@@ -143,32 +163,70 @@ void Cuckoo::sort_update() {
 }
 
 void Cuckoo::worst_update() {
-	for (int i = 0; i < sn*pa; i++)
+	/*for (int i = 0; i < sn*pa; i++)
 		xx.pop_back();
 	for (int i = 0; i < sn*pa; i++) {
 		xx.push_back(x_make());
+	}*/
+
+
+	//wnest¶¬
+	for (int i = 0; i < sn; i++) {
+		for (int j = 0; j < n; j++) {
+			if(data->rd_make_phi()>pa)
+				wnest[i][j] = 1;
+			else 
+				wnest[i][j] = 0;
+		}
+	}
+	
+	//F
+	double _F = data->rd_make_phi();
+
+	
+	for (int i = 0; i < sn; i++) {
+		for (int j = 0; j < n; j++) {
+			x_dm[i].x[j] = xx[i].x[j];
+		}
 	}
 
-	//for (int i = 0; i < sn*pa; i++) {
-	//	for (int j = 0; j < n; j++) {
-	//		//xx[sn-i-1].x[j] += alpha*levy.Make();
-	//		xx[sn - i - 1].x[j] += levy.Make_s(xx[sn-i-1].x[j], best.x[j]);
-	//		//xx[sn - i - 1].x[j] =xx[0].x[j]+ alpha*levy.Make();
-	//		if (xx[sn-i-1].x[j] > data->max || xx[sn-i-1].x[j] < data->min) {
-	//			double am = (xx[sn-i-1].x[j] - data->min) - (int)((xx[sn-i-1].x[j] - data->min) / (data->max - data->min))*(data->max - data->min);
-	//			am = (xx[sn-i-1].x[j] > data->max ? data->max : data->min) - am;
-	//			xx[sn-i-1].x[j] = am;
-	//		}
-	//	}
-	//	xx[sn-i-1].f = func.ff[func_num](xx[sn-i-1].x);
-	//}
+	std::random_device rd;
+	std::mt19937 mt(rd());
+
+	std::shuffle(sh_num.begin(), sh_num.end(),mt);
+	std::shuffle(sh_num2.begin(), sh_num2.end(), mt);
+
+
+	//dm=nest+F*wnest›(nest_per-nest_per)
+	Bird dammy;
+	for (int j = 0; j < sn; j++) {
+		for (int i = 0; i < n; i++) {
+
+			dammy.x.push_back(xx[j].x[i]+_F*wnest[j][i]*(x_dm[sh_num[j]].x[i] - x_dm[sh_num2[j]].x[i]));
+
+			//Ü‚è•Ô‚µ
+			if (dammy.x[i] > data->max || dammy.x[i] < data->min) {
+				double am = (dammy.x[i] - data->min) - (int)((dammy.x[i] - data->min) / (data->max - data->min))*(data->max - data->min);
+				am = (dammy.x[i] > data->max ? data->max : data->min) - am;
+				dammy.x[i] = am;
+			}
+		}
+		dammy.f = func.ff[func_num](dammy.x);
+		std::cout << "Œ³:" << xx[j].f << " dm:" << dammy.f << std::endl;
+		if (xx[j].f > dammy.f) {
+			for (int i = 0; i < n; i++) {
+				xx[j].x[i] = dammy.x[i];
+			}
+			xx[j].f = dammy.f;
+		}
+	}
 
 }
 
 void Cuckoo::update() {
 	for (int i = 0; i < sn; i++) {
 		//x_update();
-		x_update_s();
+		x_update_s(i);
 	}
 	//x_update();
 	sort_update();
