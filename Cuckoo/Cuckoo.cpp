@@ -202,6 +202,7 @@ void Cuckoo::worst_update() {
 	for (int j = 0; j < sn; j++) {
 		for (int i = 0; i < n; i++) {
 
+
 			dammy.x.push_back(xx[j].x[i]+_F*wnest[j][i]*(x_dm[sh_num[j]].x[i] - x_dm[sh_num2[j]].x[i]));
 
 			//Ü‚è•Ô‚µ
